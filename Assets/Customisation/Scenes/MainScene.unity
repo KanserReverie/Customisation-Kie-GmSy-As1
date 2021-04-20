@@ -274,13 +274,20 @@ MonoBehaviour:
   hairIndex: 0
   armourIndex: 0
   clothesIndex: 0
-  characterRenderer: {fileID: 0}
+  characterRenderer: {fileID: 7473174681860096179}
   skinMax: 4
   eyesMax: 4
   mouthMax: 3
   hairMax: 5
   armourMax: 11
   clothesMax: 11
+  matName:
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
 --- !u!4 &870419510
 Transform:
   m_ObjectHideFlags: 0
