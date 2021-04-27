@@ -4,20 +4,35 @@ using UnityEngine;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class CustomisationSet : MonoBehaviour
 {
     [Header("Character Name")]
     public string characterName;
+
+    [Header("Character Race")]
+    public CharacterRace characterRace = CharacterRace.Human;
+    public string[] selectedRace = new string[3];
+    public int selectedRaceIndex = 0;
+
     [Header("Character Class")]
     public CharacterClass characterClass = CharacterClass.Barbarian;
     public string[] selectedClass = new string[8];
     public int selectedClassIndex = 0;
+
+    [Header("Character Ability")]
+    public CharacterAbility characterAbility = CharacterAbility.ExtraStrength;
+    public string[] selectedAbility = new string[3];
+    public int selectedAbilityIndex = 0;
+
     [System.Serializable]
     public struct Stats
     {
         public string baseStatsName;
         public int baseStats;
+        public int abilityStats;
+        public int raceStats;
         public int tempStats;
     };
     public Stats[] characterStats;
@@ -25,6 +40,8 @@ public class CustomisationSet : MonoBehaviour
     public bool showDropdown;
     public Vector2 scrollPos;
     public string classButton = "";
+    public string raceButton = "";
+    public string abilityButton = "";
     public int statPoints = 10;
     [Header("Texture Lists")]
     public List<Texture2D> skin = new List<Texture2D>();
@@ -43,12 +60,25 @@ public class CustomisationSet : MonoBehaviour
     public int eyesMax, mouthMax, hairMax, armourMax, clothesMax;
     [Header("Mat Name")]
     public string[] matName = new string[6];
+    [Header("Stats")]
+    public Text strengthText;
+    public Text dexterityText;
+    public Text constitutionText;
+    public Text wisdomText;
+    public Text intelligenceText;
+    public Text charismaText;
+    public Text totalText;
+    public InputField nameText;
 
     private void Start()
     {
         matName = new string[] { "Skin", "Eyes", "Mouth", "Hair", "Clothes", "Armour" };
 
         selectedClass = new string[] { "Barbarian", "Bard", "Druid", "Monk", "Paladin", "Ranger", "Sorcerer", "Warlock" };
+
+        selectedRace = new string[] { "Human", "Elf", "Orc"};
+
+        selectedAbility = new string[] { "ExtraStrength", "ExtraDexterity", "ExtraWisdom"};
 
         for (int i = 0; i < skinMax; i++)
         {
@@ -63,7 +93,7 @@ public class CustomisationSet : MonoBehaviour
         for (int i = 0; i < mouthMax; i++)
         {
             Texture2D tempTexture = Resources.Load("Character/Mouth_" + i) as Texture2D;
-           mouth.Add(tempTexture);
+            mouth.Add(tempTexture);
         }
         for (int i = 0; i < hairMax; i++)
         {
@@ -80,9 +110,12 @@ public class CustomisationSet : MonoBehaviour
             Texture2D tempTexture = Resources.Load("Character/Armour_" + i) as Texture2D;
             armour.Add(tempTexture);
         }
-    }
-    
-    void SetTexture(string type, int dir)
+        ChooseClass(0);
+        ChooseRace(0);
+        ChooseAbility(0);
+}
+
+    private void SetTexture(string type, int dir)
     {
         int index = 0, max = 0, matIndex = 0;
         Texture2D[] textures = new Texture2D[0];
@@ -132,11 +165,11 @@ public class CustomisationSet : MonoBehaviour
 
         }
         index += dir;
-        if(index < 0)
+        if (index < 0)
         {
             index = max - 1;
         }
-        if(index > max - 1)
+        if (index > max - 1)
         {
             index = 0;
         }
@@ -166,8 +199,29 @@ public class CustomisationSet : MonoBehaviour
                 break;
         }
     }
+    public void IncreaseTexture(string _type)
+    {
+        SetTexture(_type, 1);
+    }
+    public void DecreaseTexture(string _type)
+    {
+        SetTexture(_type, -1);
 
-    void ChooseClass(int classIndex)
+    }
+    private void Update()
+    {
+        strengthText.text = (characterStats[0].baseStats + characterStats[0].tempStats + characterStats[0].raceStats + characterStats[0].abilityStats).ToString();
+        dexterityText.text = (characterStats[1].baseStats + characterStats[1].tempStats + characterStats[1].raceStats + characterStats[1].abilityStats).ToString();
+        constitutionText.text = (characterStats[2].baseStats + characterStats[2].tempStats + characterStats[2].raceStats + characterStats[2].abilityStats).ToString();
+        wisdomText.text = (characterStats[3].baseStats + characterStats[3].tempStats + characterStats[3].raceStats + characterStats[3].abilityStats).ToString();
+        intelligenceText.text = (characterStats[4].baseStats + characterStats[4].tempStats + characterStats[4].raceStats + characterStats[4].abilityStats).ToString();
+        charismaText.text = (characterStats[5].baseStats + characterStats[5].tempStats + characterStats[5].raceStats + characterStats[5].abilityStats).ToString();
+        totalText.text = ("Points: " + statPoints);
+        characterName = nameText.text;
+    }
+
+
+    public void ChooseClass(int classIndex)
     {
         // Will come back to this.
         switch (classIndex)
@@ -230,7 +284,7 @@ public class CustomisationSet : MonoBehaviour
                 characterStats[3].baseStats = 12;
                 characterStats[4].baseStats = 8;
                 characterStats[5].baseStats = 8;
-                
+
                 characterClass = CharacterClass.Ranger;
                 break;
             case 6:
@@ -241,7 +295,7 @@ public class CustomisationSet : MonoBehaviour
                 characterStats[3].baseStats = 8;
                 characterStats[4].baseStats = 8;
                 characterStats[5].baseStats = 14;
-                
+
                 characterClass = CharacterClass.Sorcerer;
                 break;
             case 7:
@@ -252,30 +306,86 @@ public class CustomisationSet : MonoBehaviour
                 characterStats[3].baseStats = 10;
                 characterStats[4].baseStats = 14;
                 characterStats[5].baseStats = 18;
-                
+
                 characterClass = CharacterClass.Warlock;
+                break;
+        }
+    }
+
+
+    public void ChooseRace(int raceIndex)
+    {
+        // Will come back to this.
+        switch (raceIndex)
+        {
+            case 0:
+                characterStats[0].raceStats = 0;
+                characterStats[1].raceStats = 1;
+                characterStats[2].raceStats = 0;
+                characterStats[3].raceStats = 0;
+                characterStats[4].raceStats = 0;
+                characterStats[5].raceStats = 3;
+                characterRace = CharacterRace.Human;
+                break;
+            case 1:
+                characterStats[0].raceStats = 0;
+                characterStats[1].raceStats = 0;
+                characterStats[2].raceStats = 0;
+                characterStats[3].raceStats = 1;
+                characterStats[4].raceStats = 3;
+                characterStats[5].raceStats = 0;
+                characterRace = CharacterRace.Elf;
+                break;
+            case 2:
+                characterStats[0].raceStats = 3;
+                characterStats[1].raceStats = 0;
+                characterStats[2].raceStats = 1;
+                characterStats[3].raceStats = 0;
+                characterStats[4].raceStats = 0;
+                characterStats[5].raceStats = 0;
+                characterRace = CharacterRace.Orc;
+                break;
+        }
+    }
+
+
+    public void ChooseAbility(int abilityIndex)
+    {
+        // Will come back to this.
+        switch (abilityIndex)
+        {
+            case 0:
+                characterStats[0].abilityStats = 4;
+                characterStats[1].abilityStats = 0;
+                characterStats[2].abilityStats = 0;
+                characterStats[3].abilityStats = 0;
+                characterStats[4].abilityStats = 0;
+                characterStats[5].abilityStats = 0;
+                characterAbility = CharacterAbility.ExtraStrength;
+                break;
+            case 1:
+                characterStats[0].abilityStats = 0;
+                characterStats[1].abilityStats = 4;
+                characterStats[2].abilityStats = 0;
+                characterStats[3].abilityStats = 0;
+                characterStats[4].abilityStats = 0;
+                characterStats[5].abilityStats = 0;
+                characterAbility = CharacterAbility.ExtraDexterity;
+                break;
+            case 2:
+                characterStats[0].abilityStats = 0;
+                characterStats[1].abilityStats = 0;
+                characterStats[2].abilityStats = 0;
+                characterStats[3].abilityStats = 4;
+                characterStats[4].abilityStats = 0;
+                characterStats[5].abilityStats = 0;
+                characterAbility = CharacterAbility.ExtraWisdom;
                 break;
         }
     }
 
     public void SaveCharacter()
     {
-        // Binary stuff, will get to it later.
-        //////// Converting our game classes into something we can write to a file.
-        //////PlayerData data = new PlayerData();
-
-        //////// Creating a new binary formatter.
-        //////BinaryFormatter formatter = new BinaryFormatter();
-        //////// Location we are saving the file.
-        //////string path = Application.dataPath + "/BSave.this";
-        //////// Creating a file at the file path
-        //////FileStream stream = new FileStream(path, FileMode.Create);
-
-        //////// Conver a class into a string that can be written to the file
-        //////formatter.Serialize(stream, data);
-
-        //////stream.Close();
-
         PlayerPrefs.SetInt("SkinIndex", skinIndex);
         PlayerPrefs.SetInt("HairIndex", hairIndex);
         PlayerPrefs.SetInt("EyesIndex", eyesIndex);
@@ -283,76 +393,211 @@ public class CustomisationSet : MonoBehaviour
         PlayerPrefs.SetInt("ClothesIndex", clothesIndex);
         PlayerPrefs.SetInt("ArmourIndex", armourIndex);
 
+        // Save Player Other Details
+        PlayerPrefs.SetString("CharacterRace", selectedRace[selectedRaceIndex]);
+        PlayerPrefs.SetString("CharacterClass", selectedClass[selectedClassIndex]);
+        PlayerPrefs.SetString("CharacterAbility", selectedAbility[selectedAbilityIndex]);
+
         PlayerPrefs.SetString("characterName", characterName);
 
         for (int i = 0; i < characterStats.Length; i++)
         {
-            PlayerPrefs.SetInt(characterStats[i].baseStatsName, characterStats[i].baseStats + characterStats[i].tempStats);
+            PlayerPrefs.SetInt(characterStats[i].baseStatsName, characterStats[i].baseStats + characterStats[i].tempStats + characterStats[i].abilityStats + characterStats[i].raceStats);
         }
-        PlayerPrefs.SetString("CharacterClass", selectedClass[selectedClassIndex]);
     }
 
+    //private void OnGUI()
+    //{
+    //    // I'm going to try make the following neater and easier to follow.
+    //    #region GUI value setup
+    //    // 16:9
+    //    Vector2 scr = new Vector2(Screen.width / 16, Screen.height / 9);
+    //    // Shuffle GUI down the screen.
 
-    private void OnGUI()
+    //    // Start positions.
+    //    float left = 0.25f * scr.x;
+    //    float mid = 0.75f * scr.x;
+    //    float right = 2.25f * scr.x;
+    //    // Sizes.
+    //    float x = 0.5f * scr.x;
+    //    float y = 0.5f * scr.x;
+    //    float lable = 1.5f * scr.x;
+    //    #endregion
+    //    #region Customisation Textures
+    //    for (int i = 0; i < matName.Length; i++)
+    //    {
+    //        if (GUI.Button(new Rect(left, y + i * y, x, y), "<"))
+    //        {
+    //            SetTexture(matName[i], -1);
+    //        }
+    //        GUI.Box(new Rect(mid, y + i * y, lable, y), matName[i]);
+    //        if (GUI.Button(new Rect(right, y + i * y, x, y), ">"))
+    //        {
+    //            SetTexture(matName[i], 1);
+    //        }
+    //    }
+    //    #endregion
+    //    #region Choose Class
+    //    float classX = 12.75f * scr.x;
+    //    float h = 0;
+    //    if (GUI.Button(new Rect(classX, y + h * y, 4 * x, y), classButton))
+    //    {
+    //        showDropdown = !showDropdown;
+    //    }
+    //    h++;
+    //    if (showDropdown)
+    //    {
+    //        scrollPos = GUI.BeginScrollView(
+    //            new Rect(classX, y + h * y, 4 * x, 4 * y), scrollPos,
+    //            new Rect(0, 0, 0, selectedClass.Length * y), false, true);
+
+    //        for (int i = 0; i < selectedClass.Length; i++)
+    //        {
+    //            if (GUI.Button(new Rect(0, i * y, 3 * x, y), selectedClass[i]))
+    //            {
+    //                ChooseClass(i);
+    //                classButton = selectedClass[i];
+    //                showDropdown = false;
+    //            }
+    //        }
+
+    //        GUI.EndScrollView();
+    //    }
+    //    #endregion
+    //    #region Set Stats
+    //    GUI.Box(new Rect(classX, 6 * y, 4 * x, y), "Points: " + statPoints);
+
+    //    for (int i = 0; i < characterStats.Length; i++)
+    //    {
+    //        if (statPoints > 0)
+    //        {
+    //            // +
+    //            if(GUI.Button(new Rect(classX-x, 7 *y +i*y,x,y),"+"))
+    //            {
+    //                statPoints--;
+    //                characterStats[i].tempStats++;
+    //            }
+    //        }
+    //        GUI.Box(new Rect(classX, 7 * y + i * y, 4 * x, y), characterStats[i].baseStatsName + " : " + (characterStats[i].baseStats + characterStats[i].tempStats));
+    //        if (statPoints < 10 && characterStats[i].tempStats > 0)
+    //        {
+    //            // -
+    //            if (GUI.Button(new Rect(classX+ 4*x, 7*y+i*y,x,y), "-"))
+    //            {
+    //                statPoints++;
+    //                characterStats[i].tempStats--;
+    //            }
+    //        }
+    //    }
+    //    #endregion
+
+    //    characterName = GUI.TextField(new Rect(left, 7 * y, 5 * x, y), characterName, 32);
+    //    if(GUI.Button(new Rect(left, 8 * y , 5 * x, y), "Save and Play"))
+    //    {
+    //        SaveCharacter();
+    //        SceneManager.LoadScene(1);
+    //    }
+    //}
+
+
+    public void Submit()
     {
-        // I'm going to try make the following neater and easier to follow.
-        #region GUI value setup
-        // 16:9
-        Vector2 scr = new Vector2(Screen.width / 16, Screen.height / 9);
-        // Shuffle GUI down the screen.
-
-        // Start positions.
-        float left = 0.25f * scr.x;
-        float mid = 0.75f * scr.x;
-        float right = 2.25f * scr.x;
-        // Sizes.
-        float x = 0.5f * scr.x;
-        float y = 0.5f * scr.x;
-        float lable = 1.5f * scr.x;
-        #endregion
-        #region Customisation Textures
-        for (int i = 0; i < matName.Length; i++)
-        {
-            if (GUI.Button(new Rect(left, y + i * y, x, y), "<"))
-            {
-                SetTexture(matName[i], -1);
-            }
-            GUI.Box(new Rect(mid, y + i * y, lable, y), matName[i]);
-            if (GUI.Button(new Rect(right, y + i * y, x, y), ">"))
-            {
-                SetTexture(matName[i], 1);
-            }
-        }
-        #endregion
-        #region Choose Class
-        float classX = 12.75f * scr.x;
-        float h = 0;
-        if(GUI.Button(new Rect(classX,y+h*y,4*x,y),classButton))
-        {
-            showDropdown = !showDropdown;
-        }
-        h++;
-        if(showDropdown)
-        {
-            scrollPos = GUI.BeginScrollView(
-                new Rect(classX, y + h * y, 4 * x, 4 * y), scrollPos,
-                new Rect(0, 0, 0, selectedClass.Length * y), false, true);
-
-            for (int i = 0; i < selectedClass.Length; i++)
-            {
-                if(GUI.Button(new Rect(0, i*y, 3*x, y), selectedClass[i]))
-                {
-                    ChooseClass(i);
-                    classButton = selectedClass[i];
-                    showDropdown = false;
-                }
-            } 
-        }
-        #endregion
-        #region Set Stats
-
-        #endregion
+        SaveCharacter();
+        SceneManager.LoadScene(1);
     }
+
+    public void RaiseStat(string stat)
+    {
+        if (statPoints > 0)
+        {
+            switch (stat)
+            {
+                case "Strength":
+                    statPoints--;
+                    characterStats[0].tempStats++;
+                    break;
+                case "Dexterity":
+                    statPoints--;
+                    characterStats[1].tempStats++;
+                    break;
+                case "Constitution":
+                    statPoints--;
+                    characterStats[2].tempStats++;
+                    break;
+                case "Wisdom":
+                    statPoints--;
+                    characterStats[3].tempStats++;
+                    break;
+                case "Intelligence":
+                    statPoints--;
+                    characterStats[4].tempStats++;
+                    break;
+                case "Charisma":
+                    statPoints--;
+                    characterStats[5].tempStats++;
+                    break;
+            }
+        }
+    }
+
+    public void Lowerstat(string stat)
+    {
+        if (statPoints < 10)
+        {
+            switch (stat)
+            {
+                case "Strength":
+                    if (characterStats[0].tempStats > 0)
+                    {
+                        statPoints++;
+                        characterStats[0].tempStats--;
+                    }
+                    break;
+                case "Dexterity":
+                    if (characterStats[1].tempStats > 0)
+                    {
+                        statPoints++;
+                        characterStats[1].tempStats--;
+                    }
+                    break;
+                case "Constitution":
+                    if (characterStats[2].tempStats > 0)
+                    {
+                        statPoints++;
+                        characterStats[2].tempStats--;
+                    }
+                    break;
+                case "Wisdom":
+                    if (characterStats[3].tempStats > 0)
+                    {
+                        statPoints++;
+                        characterStats[3].tempStats--;
+                    }
+                    break;
+                case "Intelligence":
+                    if (characterStats[4].tempStats > 0)
+                    {
+                        statPoints++;
+                        characterStats[4].tempStats--;
+                    }
+                    break;
+                case "Charisma":
+                    if (characterStats[5].tempStats > 0)
+                    {
+                        statPoints++;
+                        characterStats[5].tempStats--;
+                    }
+                    break;
+            }
+        }
+    }
+}
+
+public enum CharacterRace
+{
+    Human,
+    Elf,
+    Orc
 }
 
 public enum CharacterClass
@@ -365,4 +610,11 @@ public enum CharacterClass
     Ranger,
     Sorcerer,
     Warlock
+}
+
+public enum CharacterAbility
+{
+    ExtraStrength,
+    ExtraDexterity,
+    ExtraWisdom
 }
