@@ -472,7 +472,7 @@ public class CustomisationSet : MonoBehaviour
     //        if (statPoints > 0)
     //        {
     //            // +
-    //            if(GUI.Button(new Rect(classX-x, 7 *y +i*y,x,y),"+"))
+    //            if (GUI.Button(new Rect(classX - x, 7 * y + i * y, x, y), "+"))
     //            {
     //                statPoints--;
     //                characterStats[i].tempStats++;
@@ -482,7 +482,7 @@ public class CustomisationSet : MonoBehaviour
     //        if (statPoints < 10 && characterStats[i].tempStats > 0)
     //        {
     //            // -
-    //            if (GUI.Button(new Rect(classX+ 4*x, 7*y+i*y,x,y), "-"))
+    //            if (GUI.Button(new Rect(classX + 4 * x, 7 * y + i * y, x, y), "-"))
     //            {
     //                statPoints++;
     //                characterStats[i].tempStats--;
@@ -492,7 +492,7 @@ public class CustomisationSet : MonoBehaviour
     //    #endregion
 
     //    characterName = GUI.TextField(new Rect(left, 7 * y, 5 * x, y), characterName, 32);
-    //    if(GUI.Button(new Rect(left, 8 * y , 5 * x, y), "Save and Play"))
+    //    if (GUI.Button(new Rect(left, 8 * y, 5 * x, y), "Save and Play"))
     //    {
     //        SaveCharacter();
     //        SceneManager.LoadScene(1);

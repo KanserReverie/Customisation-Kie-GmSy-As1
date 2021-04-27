@@ -14,6 +14,7 @@ namespace Debugging.Player
         [Header("Player")]
         public Renderer characterRenderer;
         public GameObject player;
+        public Movement m;
         [Header("Character Health Elements")]
         #region Player Health Variables.
         private float health;
@@ -23,7 +24,6 @@ namespace Debugging.Player
         public Image healthbar;
         public Text healthText;
         public Text healthRegenText;
-        public Slider UseHealth;
         private int healthUseage;
         public Text healthUseageText;
         #endregion
@@ -75,6 +75,7 @@ namespace Debugging.Player
         {
             CheckStats();
             RegenStats();
+            UpdateStatTexts();
         }
 
         // Loads up all the player details and prints them.
@@ -147,8 +148,6 @@ namespace Debugging.Player
             uniqueAbilityText.text = uniqueAbility;
             playerNameText.text = player.name;
             healthUseage = 10;
-            UseHealth.maxValue = 20;
-            UseHealth.minValue = 10;
         }
 
         // Loads in all the player stats from file.
@@ -160,8 +159,9 @@ namespace Debugging.Player
             characterStats[3] = PlayerPrefs.GetInt("Wisdom");
             characterStats[4] = PlayerPrefs.GetInt("Intelligence");
             characterStats[5] = PlayerPrefs.GetInt("Charisma");
-            player.name = PlayerPrefs.GetString("CharacterName");
+            player.name = PlayerPrefs.GetString("characterName");
             uniqueAbility = PlayerPrefs.GetString("CharacterAbility");
+            m.levelup(characterStats[1]);
             EquateOtherStats();
         }
 
@@ -300,13 +300,7 @@ namespace Debugging.Player
             stamina = maxStamina;
             staminaRegen += Mathf.RoundToInt(characterStats[1] / 3);
             #endregion
-        }
-
-        // Uses a slider to change the health used.
-        public void ChangeHealthUseage(float value)
-        {
-            healthUseage = Mathf.RoundToInt(value);
-            healthUseageText.text = ("Use " + healthUseage);
+            m.levelup(characterStats[1]);
         }
     }
 }

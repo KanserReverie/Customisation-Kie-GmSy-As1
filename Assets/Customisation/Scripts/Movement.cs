@@ -15,6 +15,7 @@ namespace Debugging.Player
         private Vector3 _moveDir;
         private CharacterController _charC;
         private Animator myAnimator;
+        public CustomisationGet GetG;
         #endregion
 
         private void Start()
@@ -26,6 +27,27 @@ namespace Debugging.Player
         private void Update()
         {
             Move();
+            StatUse();
+        }
+
+        private void StatUse()
+        {
+            if (Input.GetKey(KeyCode.V))
+            {
+                GetG.UseStat("health");
+            }
+            if (Input.GetKey(KeyCode.B))
+            {
+                GetG.UseStat("mana");
+            }
+            if (Input.GetKey(KeyCode.N))
+            {
+                GetG.UseStat("stamina");
+            }
+            if (Input.GetKey(KeyCode.M))
+            {
+                GetG.LevelUp();
+            }
         }
 
         private void Move()
@@ -36,15 +58,15 @@ namespace Debugging.Player
             {
                 if (Input.GetButton("Crouch"))
                 {
-                    moveSpeed = runSpeed;
+                    moveSpeed = crouchSpeed;
                     myAnimator.SetFloat("speed", 0.25f);
                 }
                 else
                 {
                     if (Input.GetButton("Sprint"))
                     {
-                        moveSpeed = crouchSpeed;
-                        myAnimator.SetFloat("speed", 3f);
+                        moveSpeed = runSpeed;
+                        myAnimator.SetFloat("speed", 7f);
                     }
                     else if (!Input.GetButton("Sprint"))
                     {
@@ -64,6 +86,13 @@ namespace Debugging.Player
             }
             _moveDir.y -= _gravity * Time.deltaTime;
             _charC.Move(_moveDir * Time.deltaTime);
+        }
+
+        public void levelup(int dex)
+        {
+            walkSpeed = walkSpeed + (0.1f*dex);
+            runSpeed = walkSpeed * 7;
+            crouchSpeed = walkSpeed * 0.25f;
         }
 
     }
