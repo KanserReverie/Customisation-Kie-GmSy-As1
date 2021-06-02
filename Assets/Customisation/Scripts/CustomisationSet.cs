@@ -210,39 +210,7 @@ public class CustomisationSet : MonoBehaviour
 
     }
 
-    void LoadTextures()
-    {
-        for (int i = 0; i < skinMax; i++)
-        {
-            Texture2D tempTexture = Resources.Load("Character/Skin_" + i) as Texture2D;
-            skin.Add(tempTexture);
-        }
-        for (int i = 0; i < eyesMax; i++)
-        {
-            Texture2D tempTexture = Resources.Load("Character/Eyes_" + i) as Texture2D;
-            eyes.Add(tempTexture);
-        }
-        for (int i = 0; i < mouthMax; i++)
-        {
-            Texture2D tempTexture = Resources.Load("Character/Mouth_" + i) as Texture2D;
-            mouth.Add(tempTexture);
-        }
-        for (int i = 0; i < hairMax; i++)
-        {
-            Texture2D tempTexture = Resources.Load("Character/Hair_" + i) as Texture2D;
-            hair.Add(tempTexture);
-        }
-        for (int i = 0; i < clothesMax; i++)
-        {
-            Texture2D tempTexture = Resources.Load("Character/Clothes_" + i) as Texture2D;
-            clothes.Add(tempTexture);
-        }
-        for (int i = 0; i < armourMax; i++)
-        {
-            Texture2D tempTexture = Resources.Load("Character/Armour_" + i) as Texture2D;
-            armour.Add(tempTexture);
-        }
-    }
+    
     private void Update()
     {
         strengthText.text = (characterStats[0].baseStats + characterStats[0].tempStats + characterStats[0].raceStats + characterStats[0].abilityStats).ToString();
@@ -442,98 +410,98 @@ public class CustomisationSet : MonoBehaviour
         }
     }
 
-    private void OnGUI()
-    {
-        // I'm going to try make the following neater and easier to follow.
-        #region GUI value setup
-        // 16:9
-        Vector2 scr = new Vector2(Screen.width / 16, Screen.height / 9);
-        // Shuffle GUI down the screen.
+    //private void OnGUI()
+    //{
+    //    // I'm going to try make the following neater and easier to follow.
+    //    #region GUI value setup
+    //    // 16:9
+    //    Vector2 scr = new Vector2(Screen.width / 16, Screen.height / 9);
+    //    // Shuffle GUI down the screen.
 
-        // Start positions.
-        float left = 0.25f * scr.x;
-        float mid = 0.75f * scr.x;
-        float right = 2.25f * scr.x;
-        // Sizes.
-        float x = 0.5f * scr.x;
-        float y = 0.5f * scr.x;
-        float lable = 1.5f * scr.x;
-        #endregion
-        #region Customisation Textures
-        for (int i = 0; i < matName.Length; i++)
-        {
-            if (GUI.Button(new Rect(left, y + i * y, x, y), "<"))
-            {
-                SetTexture(matName[i], -1);
-            }
-            GUI.Box(new Rect(mid, y + i * y, lable, y), matName[i]);
-            if (GUI.Button(new Rect(right, y + i * y, x, y), ">"))
-            {
-                SetTexture(matName[i], 1);
-            }
-        }
-        #endregion
-        #region Choose Class
-        float classX = 12.75f * scr.x;
-        float h = 0;
-        if (GUI.Button(new Rect(classX, y + h * y, 4 * x, y), classButton))
-        {
-            showDropdown = !showDropdown;
-        }
-        h++;
-        if (showDropdown)
-        {
-            scrollPos = GUI.BeginScrollView(
-                new Rect(classX, y + h * y, 4 * x, 4 * y), scrollPos,
-                new Rect(0, 0, 0, selectedClass.Length * y), false, true);
+    //    // Start positions.
+    //    float left = 0.25f * scr.x;
+    //    float mid = 0.75f * scr.x;
+    //    float right = 2.25f * scr.x;
+    //    // Sizes.
+    //    float x = 0.5f * scr.x;
+    //    float y = 0.5f * scr.x;
+    //    float lable = 1.5f * scr.x;
+    //    #endregion
+    //    #region Customisation Textures
+    //    for (int i = 0; i < matName.Length; i++)
+    //    {
+    //        if (GUI.Button(new Rect(left, y + i * y, x, y), "<"))
+    //        {
+    //            SetTexture(matName[i], -1);
+    //        }
+    //        GUI.Box(new Rect(mid, y + i * y, lable, y), matName[i]);
+    //        if (GUI.Button(new Rect(right, y + i * y, x, y), ">"))
+    //        {
+    //            SetTexture(matName[i], 1);
+    //        }
+    //    }
+    //    #endregion
+    //    #region Choose Class
+    //    float classX = 12.75f * scr.x;
+    //    float h = 0;
+    //    if (GUI.Button(new Rect(classX, y + h * y, 4 * x, y), classButton))
+    //    {
+    //        showDropdown = !showDropdown;
+    //    }
+    //    h++;
+    //    if (showDropdown)
+    //    {
+    //        scrollPos = GUI.BeginScrollView(
+    //            new Rect(classX, y + h * y, 4 * x, 4 * y), scrollPos,
+    //            new Rect(0, 0, 0, selectedClass.Length * y), false, true);
 
-            for (int i = 0; i < selectedClass.Length; i++)
-            {
-                if (GUI.Button(new Rect(0, i * y, 3 * x, y), selectedClass[i]))
-                {
-                    ChooseClass(i);
-                    classButton = selectedClass[i];
-                    showDropdown = false;
-                }
-            }
+    //        for (int i = 0; i < selectedClass.Length; i++)
+    //        {
+    //            if (GUI.Button(new Rect(0, i * y, 3 * x, y), selectedClass[i]))
+    //            {
+    //                ChooseClass(i);
+    //                classButton = selectedClass[i];
+    //                showDropdown = false;
+    //            }
+    //        }
 
-            GUI.EndScrollView();
-        }
-        #endregion
-        #region Set Stats
-        GUI.Box(new Rect(classX, 6 * y, 4 * x, y), "Points: " + statPoints);
+    //        GUI.EndScrollView();
+    //    }
+    //    #endregion
+    //    #region Set Stats
+    //    GUI.Box(new Rect(classX, 6 * y, 4 * x, y), "Points: " + statPoints);
 
-        for (int i = 0; i < characterStats.Length; i++)
-        {
-            if (statPoints > 0)
-            {
-                // +
-                if (GUI.Button(new Rect(classX - x, 7 * y + i * y, x, y), "+"))
-                {
-                    statPoints--;
-                    characterStats[i].tempStats++;
-                }
-            }
-            GUI.Box(new Rect(classX, 7 * y + i * y, 4 * x, y), characterStats[i].baseStatsName + " : " + (characterStats[i].baseStats + characterStats[i].tempStats));
-            if (statPoints < 10 && characterStats[i].tempStats > 0)
-            {
-                // -
-                if (GUI.Button(new Rect(classX + 4 * x, 7 * y + i * y, x, y), "-"))
-                {
-                    statPoints++;
-                    characterStats[i].tempStats--;
-                }
-            }
-        }
-        #endregion
+    //    for (int i = 0; i < characterStats.Length; i++)
+    //    {
+    //        if (statPoints > 0)
+    //        {
+    //            // +
+    //            if (GUI.Button(new Rect(classX - x, 7 * y + i * y, x, y), "+"))
+    //            {
+    //                statPoints--;
+    //                characterStats[i].tempStats++;
+    //            }
+    //        }
+    //        GUI.Box(new Rect(classX, 7 * y + i * y, 4 * x, y), characterStats[i].baseStatsName + " : " + (characterStats[i].baseStats + characterStats[i].tempStats));
+    //        if (statPoints < 10 && characterStats[i].tempStats > 0)
+    //        {
+    //            // -
+    //            if (GUI.Button(new Rect(classX + 4 * x, 7 * y + i * y, x, y), "-"))
+    //            {
+    //                statPoints++;
+    //                characterStats[i].tempStats--;
+    //            }
+    //        }
+    //    }
+    //    #endregion
 
-        characterName = GUI.TextField(new Rect(left, 7 * y, 5 * x, y), characterName, 32);
-        if (GUI.Button(new Rect(left, 8 * y, 5 * x, y), "Save and Play"))
-        {
-            SaveCharacter();
-            SceneManager.LoadScene(1);
-        }
-    }
+    //    characterName = GUI.TextField(new Rect(left, 7 * y, 5 * x, y), characterName, 32);
+    //    if (GUI.Button(new Rect(left, 8 * y, 5 * x, y), "Save and Play"))
+    //    {
+    //        SaveCharacter();
+    //        SceneManager.LoadScene(1);
+    //    }
+    //}
 
 
     public void Submit()
