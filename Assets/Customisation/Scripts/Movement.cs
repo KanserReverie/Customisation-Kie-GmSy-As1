@@ -16,6 +16,8 @@ namespace Debugging.Player
         private CharacterController _charC;
         private Animator myAnimator;
         public CustomisationGet GetG;
+
+        public KeyBinds keyBinds;
         #endregion
 
         private void Start()
@@ -32,22 +34,23 @@ namespace Debugging.Player
 
         private void StatUse()
         {
-            if (Input.GetKey(KeyCode.V))
+            if (keyBinds.GetKey("Forwards"))
             {
+                Debug.Log("dfdsf");
                 GetG.UseStat("health");
             }
-            if (Input.GetKey(KeyCode.B))
-            {
-                GetG.UseStat("mana");
-            }
-            if (Input.GetKey(KeyCode.N))
-            {
-                GetG.UseStat("stamina");
-            }
-            if (Input.GetKey(KeyCode.M))
-            {
-                GetG.LevelUp();
-            }
+            //if (keyBinds.GetKey(KeyCode.B))
+            //{
+            //    GetG.UseStat("mana");
+            //}
+            //if (keyBinds.GetKey(KeyCode.N))
+            //{
+            //    GetG.UseStat("stamina");
+            //}
+            //if (keyBinds.GetKey(KeyCode.M))
+            //{
+            //    GetG.LevelUp();
+            //}
         }
 
         private void Move()
